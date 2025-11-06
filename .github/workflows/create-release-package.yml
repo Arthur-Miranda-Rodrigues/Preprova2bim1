@@ -1,6 +1,5 @@
 name: Criar Release Package
 
-# Define o evento para disparar o workflow manualmente pela interface do GitHub Actions
 on:
   workflow_dispatch:
     inputs:
@@ -19,22 +18,23 @@ on:
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
+
+    # 👇 Adicione estas linhas
+    permissions:
+      contents: write
+
     steps:
-      # Faz o checkout do repositório
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      # Compacta o repositório inteiro em um arquivo zip
       - name: Criar pacote ZIP
         id: zip_repo
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
           filename: 'repo-package.zip'
-          # Exclui arquivos e diretórios desnecessários do zip
           exclusions: '*.git* /*node_modules/* .editorconfig'
 
-      # Cria um novo release e anexa o pacote zip
       - name: Criar Release
         uses: ncipollo/release-action@v1.14.0
         with:
